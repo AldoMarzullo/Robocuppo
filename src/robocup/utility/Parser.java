@@ -126,30 +126,31 @@ public class Parser {
 		} else if (splitInfo[2].equals("self")) {
 			//TODO da fare
 		} else {
-			System.out.println("message: " + splitPacket[0]);
 
-			if(splitInfo.length == 5){
-				Message msg = new Message(
-						Integer.parseInt(splitInfo[1]),
-						Integer.parseInt(splitInfo[2]),
-						splitInfo[3],
-						Integer.parseInt(splitInfo[4]),
-						splitInfo[5]);
+			Message msg = new Message();
 
-				InfoMem.HearMem.onMessageReceived(msg);
+			if(splitInfo.length == 4){
+				msg.setTime(Integer.parseInt(splitInfo[1]));
+				msg.setDirection(Integer.parseInt(splitInfo[2]));
+				msg.setMessage(splitInfo[4]);
 			}
-			
 			if(splitInfo.length == 5){
-				Message msg = new Message(
-						Integer.parseInt(splitInfo[1]),
-						Integer.parseInt(splitInfo[2]),
-						splitInfo[3],
-						Integer.parseInt(splitInfo[4]),
-						splitInfo[5]);
+				System.out.println(splitPacket[0]);
+				msg.setTime(Integer.parseInt(splitInfo[1]));
+				msg.setDirection(Integer.parseInt(splitInfo[2]));
+				msg.setTeam(splitInfo[3]);
+				msg.setMessage(splitInfo[4]);
+			}
+			if(splitInfo.length == 6){
+				msg.setTime(Integer.parseInt(splitInfo[1]));
+				msg.setDirection(Integer.parseInt(splitInfo[2]));
+				msg.setTeam(splitInfo[3]);
+				msg.setPlayerSender(Integer.parseInt(splitInfo[4]));
+				msg.setMessage(splitInfo[5]);
 
-				InfoMem.HearMem.onMessageReceived(msg);
 			}
 
+			InfoMem.HearMem.onMessageReceived(msg);
 		}
 
 	}

@@ -11,12 +11,12 @@ package robocup;
  */
 public class Message {
     private int time;
-    private int direction;
+    private double direction;
     private String team;
     private int playerSender;
     private String message;
     
-    public Message(int time, int direction, String team, int playerSender, String message) {
+    public Message(int time, double direction, String team, int playerSender, String message) {
         this.time = time;
         this.direction = direction;
         this.team = team;
@@ -24,7 +24,16 @@ public class Message {
         this.message = message;
     }
 
-    public int getTime() {
+    public Message() {
+        this.time = -1;
+        this.direction = Double.NaN;
+        this.team = "";
+        this.playerSender = -1;
+        this.message = "";
+		
+	}
+
+	public int getTime() {
         return time;
     }
 
@@ -32,7 +41,7 @@ public class Message {
         this.time = time;
     }
 
-    public int getDirection() {
+    public double getDirection() {
         return direction;
     }
 
