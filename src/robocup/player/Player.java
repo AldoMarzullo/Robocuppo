@@ -421,15 +421,14 @@ public class Player extends Thread {
         while (true) {
 
             try {
-            	this.say("ciao");
                 receiveInput();
             } catch (InterruptedException e) {
                 System.out.println("Interrupt error at Player.run");
                 e.printStackTrace();
-            } catch (UnknownHostException e) {
+            }/* catch (UnknownHostException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-            }
+            }*/
 
             if (getMem().current != null) {
                 Pos pt = mh.vSub(getMem().current, getMem().home);

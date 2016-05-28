@@ -45,7 +45,7 @@ public class Message {
         return direction;
     }
 
-    public void setDirection(int direction) {
+    public void setDirection(double direction) {
         this.direction = direction;
     }
 
