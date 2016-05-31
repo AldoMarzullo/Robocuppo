@@ -1,13 +1,13 @@
 package robocup;
 /**
-* @file Action.java
-*
-* Actions for the player to use
-*
-* @author Grant Hays
-* @date 11/9/11
-* @version 3.0
-*/
+ * @file Action.java
+ *
+ * Actions for the player to use
+ *
+ * @author Grant Hays
+ * @date 11/9/11
+ * @version 3.0
+ */
 
 import java.net.UnknownHostException;
 
@@ -20,49 +20,49 @@ import robocup.utility.Polar;
 import robocup.utility.Pos;
 
 /**
-* @class Action
-*
-* This class holds basic actions for the player to perform, such as ball searching and
-* intercepting, dashing to points, finding the ball and points and getting their coordinates.
-*
-*/
+ * @class Action
+ *
+ * This class holds basic actions for the player to perform, such as ball searching and
+ * intercepting, dashing to points, finding the ball and points and getting their coordinates.
+ *
+ */
 public class Action {
-	
-	
+
+
 	/**
-	* Default constructor
-	*/
+	 * Default constructor
+	 */
 	public Action() {
-		
+
 	}
-	
-	
+
+
 	/**
-	* Constructor with parameters
-	*
-	* @param mem The Memory containing all the parsed information from the server
-	* @param rc The RoboClient that is the player's connection to the server
-	*
-	* @pre Both a full memory and initialized RoboClient must be passed in to avoid any
-	* errors
-	* @post A new set of actions will be available for the player to call on
-	*/
+	 * Constructor with parameters
+	 *
+	 * @param mem The Memory containing all the parsed information from the server
+	 * @param rc The RoboClient that is the player's connection to the server
+	 *
+	 * @pre Both a full memory and initialized RoboClient must be passed in to avoid any
+	 * errors
+	 * @post A new set of actions will be available for the player to call on
+	 */
 	public Action(Memory mem, RoboClient rc) {
 		this.mem = mem;
 		this.rc = rc;
 	}
-	
+
 	/**
-	* This sets the Memory for the action to use. This is important as the
-	* Memory is constantly changing, and must be updated at every step.
-	* @param mem The player's Memory
-	* @pre The Memory should be the most up to date
-	* @post The actions that require a Memory will be able to pull from it
-	*/
+	 * This sets the Memory for the action to use. This is important as the
+	 * Memory is constantly changing, and must be updated at every step.
+	 * @param mem The player's Memory
+	 * @pre The Memory should be the most up to date
+	 * @post The actions that require a Memory will be able to pull from it
+	 */
 	public void setMem(Memory mem) {
 		this.mem = mem;
 	}
-	
+
 
 	public double getTurn(Polar go) {
 		double angle = go.t - mem.getDirection();
@@ -72,31 +72,31 @@ public class Action {
 			angle += 360;
 		else if(Math.abs(angle) == 180)
 			angle = 180;
-		
+
 		return(angle  * (1 + (5*mem.getAmountOfSpeed())));
 	}
-	
+
 	/**
-	* This tells the player to turn and run to a point
-	*
-	* @param go The Polar coordinates of the final position, with
-	* the player's position as an origin
-	*
-	* @pre The player must have a valid position on the field passed in
-	* @post If the player is not facing the direction of the final position, s/he will
-	* first turn toward it. If the player is approximately facing the position, s/he
-	* will dash toward the direction of the position.
-	*/
+	 * This tells the player to turn and run to a point
+	 *
+	 * @param go The Polar coordinates of the final position, with
+	 * the player's position as an origin
+	 *
+	 * @pre The player must have a valid position on the field passed in
+	 * @post If the player is not facing the direction of the final position, s/he will
+	 * first turn toward it. If the player is approximately facing the position, s/he
+	 * will dash toward the direction of the position.
+	 */
 	public void gotoPoint(Polar go) {
-		
+
 		try {
 			if((go.t > 5.0) || (go.t < -5.0)) {
 				rc.turn(go.t * (1 + (5*mem.getAmountOfSpeed())));
 				System.out.println("Gotopoint polar");
 			}
 			rc.dash(m.getDashPower(m.getPos(go), mem.getAmountOfSpeed(), mem.getDirection(), mem.getEffort(), mem.getStamina()));
-		
-			
+
+
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
@@ -104,18 +104,18 @@ public class Action {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
-	
+
+
 	public void gotoSidePoint(Pos p) {
 		Polar go = mem.getAbsPolar(p);
 		//go.print("gotoSidePoint: ");
 		if(go.r >= 0.5) {
 			try {
-				
+
 				rc.dash((m.getDashPower(m.getPos(go), mem.getAmountOfSpeed(), mem.getDirection(), mem.getEffort(), mem.getStamina())), go.t);
-			
+
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
@@ -124,23 +124,23 @@ public class Action {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
-	
+
 	/**
-	* A cartesian wrapper for the gotoPoint with Polar coordinate
-	*
-	* @param p The Cartesian Pos of position to go to
-	*
-	* @pre The player must have a valid position on the field passed in
-	*
-	* @post First, the Pos will be converted to a Polar coordinateIf the player is
-	* not facing the direction of the final position, s/he will turn toward it.
-	* If the player is approximately facing the position, s/he will dash toward the
-	* direction of the position.
-	*/
+	 * A cartesian wrapper for the gotoPoint with Polar coordinate
+	 *
+	 * @param p The Cartesian Pos of position to go to
+	 *
+	 * @pre The player must have a valid position on the field passed in
+	 *
+	 * @post First, the Pos will be converted to a Polar coordinateIf the player is
+	 * not facing the direction of the final position, s/he will turn toward it.
+	 * If the player is approximately facing the position, s/he will dash toward the
+	 * direction of the position.
+	 */
 	public void gotoPoint(Pos p) {
-		
+
 		Polar go = mem.getAbsPolar(p);
 		if(go.r >= 0.5) {
 			try {
@@ -148,8 +148,8 @@ public class Action {
 					rc.turn(go.t * (1 + (5*mem.getAmountOfSpeed())));
 				}
 				rc.dash(m.getDashPower(m.getPos(go), mem.getAmountOfSpeed(), mem.getDirection(), mem.getEffort(), mem.getStamina()));
-			
-				
+
+
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
@@ -160,8 +160,8 @@ public class Action {
 		}
 	}
 
-	
-	
+
+
 	/**
 	 * Take the Player back to his home
 	 * 
@@ -170,22 +170,22 @@ public class Action {
 	 * 
 	 * @return true if the player is in the near vicinity of his home, false if he's not there yet
 	 */
-	
+
 	public void goHome() {
 		if(!mem.isHome) {
 			gotoSidePoint(mem.home);
 		}
 	}
-	
-	
+
+
 	/**
-	* A method to find the ball on the field. If it's not in view, the player turns
-	* until he finds it. If the ball is too far, he dashes to get to it. If the ball
-	* is within 20 distance, he intercepts the ball.
-	*
-	* @throws UnknownHostException
-	* @throws InterruptedException
-	*/
+	 * A method to find the ball on the field. If it's not in view, the player turns
+	 * until he finds it. If the ball is too far, he dashes to get to it. If the ball
+	 * is within 20 distance, he intercepts the ball.
+	 *
+	 * @throws UnknownHostException
+	 * @throws InterruptedException
+	 */
 	public void findBall() throws UnknownHostException, InterruptedException {
 		if(mem.isObjVisible("ball")) {
 			ObjBall ball = mem.getBall();
@@ -193,9 +193,9 @@ public class Action {
 				rc.turn(ball.getDirection() * (1 + (5*mem.getAmountOfSpeed())));
 				Thread.sleep(100);
 			}
-			
+
 			Pos ballPos = mem.getBallPos(ball);
-			
+
 			if((ballPos.x > 52) || (ballPos.x < -20) || (ballPos.y > (mem.home.y + 6.4)) || (ballPos.y < (mem.home.y - 6.4))) {
 				gotoSidePoint(new Pos(mem.getBallPos(ball).x, mem.home.y));
 			}
@@ -205,15 +205,15 @@ public class Action {
 			else if(ball.getDistance() <= 0.7)  {
 				dribbleToGoal(ball);
 			}
-			
+
 			//Receive pass if hear call from other player
 			//TODO
-			
+
 		}
 		else
 			rc.turn(30);
 	}
-	
+
 	/*/
 	 * Defines kickoff behavior
 	 */
@@ -223,7 +223,7 @@ public class Action {
 			findBall();
 			return;
 		}
-		
+
 		ObjBall ball = mem.getBall();
 		if((ball.getDirection() > 5.0 || ball.getDirection() < -5.0)) {
 			rc.turn(ball.getDirection() * (1 + (5  *mem.getAmountOfSpeed())));
@@ -237,7 +237,7 @@ public class Action {
 			e.printStackTrace();
 		}
 		Thread.sleep(100);
-		
+
 		if(ball.getDistance() <= 0.7)  {
 			//kickToGoal(ball);
 			ObjPlayer player = closestPlayer();
@@ -245,9 +245,9 @@ public class Action {
 				passBall(ball, player);
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * Returns the closest player to the FullBack on the same team.
 	 * @post The closest player to the FullBack has been determined.
@@ -256,44 +256,34 @@ public class Action {
 	 * @throws UnknownHostException 
 	 */
 	public ObjPlayer closestPlayer() throws UnknownHostException, InterruptedException {
-		ObjPlayer closestPlayer = new ObjPlayer();
-		double distance = 0;
+		ObjPlayer closestPlayer = null;
+		double distance = 100;
+
+		if(mem.getPlayers() == null)
+			return closestPlayer;
 
 		//Loop through arraylist of ObjPlayers
 		for (int i = 0; i < mem.getPlayers().size(); ++i) {
 
-			if (!mem.getPlayers().isEmpty()) {  
-				if (distance == 0 && mem.getPlayers().get(i).getTeam().equals(rc.getTeam())) {
-					distance = mem.getPlayers().get(i).getDistance();
-				}
-				else {
-					//Test if this player is closer than the previous one
-					if (distance > mem.getPlayers().get(i).getDistance() && mem.getPlayers().get(i).getTeam().equals(rc.getTeam())) {
-						distance = mem.getPlayers().get(i).getDistance();
-						closestPlayer = mem.getPlayers().get(i);
+
+			ObjPlayer currentPlayer = mem.getPlayers().get(i);
+			//I see the player number and team
+			if ( currentPlayer.getuNum() != 0 && currentPlayer.getTeam() != null ) {
+
+				if ( currentPlayer.getTeam().equals(rc.getTeam()) ) {
+					if ( currentPlayer.getDistance() < distance ) {
+						closestPlayer = currentPlayer;
+						distance = currentPlayer.getDistance();
 					}
 				}
 			}
-			else {  //No players in Fullback's sight, so turn to another point to check again
-				rc.turn(30);
-				
-				if (!mem.getPlayers().isEmpty()) {  
-					if (distance == 0 && mem.getPlayers().get(i).getTeam().equals(rc.getTeam())) {
-						distance = mem.getPlayers().get(i).getDistance();
-					}
-					else {
-						//Test if this player is closer than the previous one
-						if (distance > mem.getPlayers().get(i).getDistance() && mem.getPlayers().get(i).getTeam().equals(rc.getTeam())) {
-							distance = mem.getPlayers().get(i).getDistance();
-							closestPlayer = mem.getPlayers().get(i);
-						}
-					}
-				}
-			}
+
+
+
 		}		
 		return closestPlayer;
 	}
-	
+
 	/*
 	 * Passes the ball to the nearest Forward (currently Player).
 	 * @param ball An ObjBall for the ball in play.
@@ -310,26 +300,26 @@ public class Action {
 		}
 		kickToPoint(ball, m.getNextPlayerPoint(p));		
 	}
-	
+
 	/**
-	* A method to find the ball on the field for FullBacks. If it's not in view, the FullBack turns
-	* until he finds it. If the ball is out of kickable range, he dashes to get to it. If the ball
-	* is within 15 distance, he intercepts the ball, and kicks it away.
-	*
-	* @throws UnknownHostException
-	* @throws InterruptedException
-	*/
+	 * A method to find the ball on the field for FullBacks. If it's not in view, the FullBack turns
+	 * until he finds it. If the ball is out of kickable range, he dashes to get to it. If the ball
+	 * is within 15 distance, he intercepts the ball, and kicks it away.
+	 *
+	 * @throws UnknownHostException
+	 * @throws InterruptedException
+	 */
 	public void FullBack_findBall() throws UnknownHostException, InterruptedException {
 		//Pos origin = new Pos(0,0);
 		//System.out.println("in FullBack_findBall");
-		
+
 		if(mem.isObjVisible("ball")) {
 			ObjBall ball = mem.getBall();
 			if((ball.getDirection() > 5.0 || ball.getDirection() < -5.0)) {
 				rc.turn(ball.getDirection());
 				Thread.sleep(100);
 			}
-			
+
 			if((ball.getDistance() > 15) && (mem.isHome == false)) {
 				goHome();
 			}
@@ -346,15 +336,15 @@ public class Action {
 	}
 
 	/**
-	* This method goes to the position that the ball will be in at time t+1 and kicks
-	* it if it is within 0.5 distance.
-	* @param ball
-	* @throws UnknownHostException
-	* @throws InterruptedException
-	*
-	* @pre A ball must be present and passed
-	* @post The player (should) go to the point where the ball is and kick it
-	*/
+	 * This method goes to the position that the ball will be in at time t+1 and kicks
+	 * it if it is within 0.5 distance.
+	 * @param ball
+	 * @throws UnknownHostException
+	 * @throws InterruptedException
+	 *
+	 * @pre A ball must be present and passed
+	 * @post The player (should) go to the point where the ball is and kick it
+	 */
 	private void interceptBall(ObjBall ball) throws UnknownHostException, InterruptedException {
 		Polar p = m.getNextBallPoint(ball);
 		/*
@@ -362,7 +352,7 @@ public class Action {
 		if((Math.abs(p2.x) >= 52.5) || (Math.abs(p2.y) >= 36))
 			return;
 		else
-		*/
+		 */
 		if(stayInBounds()) {
 			//gotoPoint(p);
 			try {
@@ -371,10 +361,10 @@ public class Action {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
 	}
-	
+
 	/**
 	 * This will attempt to keep the player from making any sudden moves while the play
 	 * mode is one in which he can't get to the ball. This keeps them from going out of
@@ -398,10 +388,10 @@ public class Action {
 			else
 				return true;
 		}
-		
+
 	}
-	
-	
+
+
 	/**
 	 * If the goal is within sight, this will kick the ball to it with maximum power. If
 	 * the goal is not in sight, this will kick towards the direction of the goal with 
@@ -432,10 +422,10 @@ public class Action {
 				System.out.println("Error at action.kickToGoal() turn");
 				e.printStackTrace();
 			}
-			
+
 		}
 	}
-	
+
 	/**
 	 * Kicks ball to a certain Polar point
 	 * 
@@ -457,9 +447,9 @@ public class Action {
 			}
 		}
 
-		
+
 	}
-	
+
 	/**
 	 * A Pos wrapper for the kickToPoint
 	 * @param ball 
@@ -470,7 +460,7 @@ public class Action {
 		Polar go = mem.getAbsPolar(p);
 		kickToPoint(ball, go);
 	}
-	
+
 	/**
 	 * This dribbles the ball in the direction of the goal until it's 18 feet outside of the 
 	 * goal, when it kicks the ball with maximum power into the goal.
@@ -483,10 +473,10 @@ public class Action {
 	public void dribbleToGoal(ObjBall ball) {
 		if(stayInBounds()) {
 			ObjGoal goal = mem.getOppGoal();
-			
+
 			if((goal != null) && (mem.getPosition().x < 35.0)) {
-					kickToPoint(ball, new Polar(5.0, (goal.getDirection() - ball.getDirection())));
-				
+				kickToPoint(ball, new Polar(5.0, (goal.getDirection() - ball.getDirection())));
+
 			}
 			else if((goal != null) && (mem.getPosition().x >= 35.0)) {
 				System.out.println("Ready to shoot");
@@ -502,11 +492,11 @@ public class Action {
 			}
 		}
 	}
-	
+
 	public MathHelp m = new MathHelp();
 	public Memory mem;
 	public RoboClient rc;
 	public Polar OppGoal;
 	public boolean atGoal;
-	
+
 }
