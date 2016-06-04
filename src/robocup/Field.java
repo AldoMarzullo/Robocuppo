@@ -71,13 +71,13 @@ public class Field {
 			posList.add(new Pos("fbr40", 40, 39));
 			posList.add(new Pos("fbr50", 50, 39));
 			
-			posList.add(new Pos("flt30", -57.5, 30));
-			posList.add(new Pos("flt20", -57.5, 20));
-			posList.add(new Pos("flt10", -57.5, 10));
+			posList.add(new Pos("flt30", -57.5, -30));
+			posList.add(new Pos("flt20", -57.5, -20));
+			posList.add(new Pos("flt10", -57.5, -10));
 			posList.add(new Pos("fl0", -57.5, 0));
-			posList.add(new Pos("flb10", -57.5, -10));
-			posList.add(new Pos("flb20", -57.5, -20));
-			posList.add(new Pos("flb30", -57.5, -30));
+			posList.add(new Pos("flb10", -57.5, 10));
+			posList.add(new Pos("flb20", -57.5, 20));
+			posList.add(new Pos("flb30", -57.5, 30));
 			
 			
 			posList.add(new Pos("flt", -52.5, -34));
@@ -139,13 +139,13 @@ public class Field {
 			posList.add(new Pos("fbr40", -40, -39));
 			posList.add(new Pos("fbr50", -50, -39));
 			
-			posList.add(new Pos("flt30", 57.5, -30));
-			posList.add(new Pos("flt20", 57.5, -20));
-			posList.add(new Pos("flt10", 57.5, -10));
+			posList.add(new Pos("flt30", 57.5, 30));
+			posList.add(new Pos("flt20", 57.5, 20));
+			posList.add(new Pos("flt10", 57.5, 10));
 			posList.add(new Pos("fl0", 57.5, 0));
-			posList.add(new Pos("flb10", 57.5, 10));
-			posList.add(new Pos("flb20", 57.5, 20));
-			posList.add(new Pos("flb30", 57.5, 30));
+			posList.add(new Pos("flb10", 57.5, -10));
+			posList.add(new Pos("flb20", 57.5, -20));
+			posList.add(new Pos("flb30", 57.5, -30));
 			
 			
 			posList.add(new Pos("flt", 52.5, 34));
