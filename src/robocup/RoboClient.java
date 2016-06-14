@@ -258,5 +258,21 @@ public class RoboClient {
         String newMessage = new String("(say \"" + message + "\")"+"\0"); 
         send(newMessage);
     }
+    
+    public enum ViewAngle { narrow, normal, wide };
+    public enum ViewQuality { high, low }
+    
+    public void changeViewQuality(ViewAngle viewAngle, ViewQuality viewQuality)
+    {
+    	String message = "(change_view " + viewAngle.toString() + " " + viewQuality + ")";    	
+    	try
+		{
+    		send(message);
+		}
+		catch (UnknownHostException e)
+		{
+			e.printStackTrace();
+		}
+    }
 
 }//end of class	

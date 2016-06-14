@@ -120,7 +120,7 @@ public class Parser {
 	 */
 	private void hearParse(Memory InfoMem, String[] splitPacket) {
 		String splitInfo[] = (splitPacket[0].split(" "));
-
+		
 		if (splitInfo[2].compareTo("referee") == 0) {
 			InfoMem.playMode = splitInfo[3];
 		} else if (splitInfo[2].equals("self")) {
@@ -132,22 +132,24 @@ public class Parser {
 			if(splitInfo.length == 4){
 				msg.setTime(Integer.parseInt(splitInfo[1]));
 				msg.setDirection(Integer.parseInt(splitInfo[2]));
-				msg.setMessage(splitInfo[4]);
+				msg.setMessage(splitInfo[3]);
 			}
 			if(splitInfo.length == 5){
-				System.out.println(splitPacket[0]);
+
 				msg.setTime(Integer.parseInt(splitInfo[1]));
 				msg.setDirection(Integer.parseInt(splitInfo[2]));
 				msg.setTeam(splitInfo[3]);
+				//	msg.setMessage(splitInfo[4].substring(1, splitInfo[4].length()-1));
 				msg.setMessage(splitInfo[4]);
 			}
 			if(splitInfo.length == 6){
+
 				msg.setTime(Integer.parseInt(splitInfo[1]));
 				msg.setDirection(Integer.parseInt(splitInfo[2]));
 				msg.setTeam(splitInfo[3]);
 				msg.setPlayerSender(Integer.parseInt(splitInfo[4]));
+				//msg.setMessage(splitInfo[5].substring(1, splitInfo[5].length()-1));
 				msg.setMessage(splitInfo[5]);
-
 			}
 
 			InfoMem.HearMem.onMessageReceived(msg);
@@ -168,6 +170,9 @@ public class Parser {
 
 		for (int i = 2; i < splitPacket.length; i += 4) {
 
+			if(i + 1 >= splitPacket.length)
+				break;
+
 			// Split up the ObjName
 			String[] splitName = (splitPacket[i].split(" "));
 			String[] splitInfo = (splitPacket[i + 1].split(" "));
@@ -187,7 +192,8 @@ public class Parser {
 			else if (splitName[0].compareTo("p") == 0) {
 				ObjPlayer newPlayer = new ObjPlayer();
 				seePlayerParse(splitName, splitInfo, newPlayer);
-				seeArray.add(newPlayer);
+				if(newPlayer != null)
+					seeArray.add(newPlayer);
 			} // - Goal -
 			else if (splitName[0].compareTo("g") == 0) {
 				ObjGoal newGoal = new ObjGoal();
@@ -197,7 +203,8 @@ public class Parser {
 			else if (splitName[0].compareTo("l") == 0) {
 				ObjLine newLine = new ObjLine();
 				seeLineParse(splitName, splitInfo, newLine);
-				seeArray.add(newLine);
+				if(newLine != null)
+					seeArray.add(newLine);
 			}
 		}
 
@@ -215,15 +222,24 @@ public class Parser {
 		// Set line's side of field
 		newLine.setSide(splitName[1]);
 
-		// Set line's Distance, Direction, DistChng, and DirChng
-		if (splitInfo.length == 3) {
-			newLine.setDistance(Double.valueOf(splitInfo[1]));
-			newLine.setDirection(Double.valueOf(splitInfo[2]));
-		} else {
-			newLine.setDistance(Double.valueOf(splitInfo[1]));
-			newLine.setDirection(Double.valueOf(splitInfo[2]));
-			newLine.setDistChng(Double.valueOf(splitInfo[3]));
-			newLine.setDirChng(Double.valueOf(splitInfo[4]));
+		try{
+			// Set line's Distance, Direction, DistChng, and DirChng
+			if (splitInfo.length == 3) {
+				/*for (String string : splitInfo) {
+				System.err.println(string);
+			}
+			System.out.println();*/
+				newLine.setDistance(Double.valueOf(splitInfo[1]));
+				newLine.setDirection(Double.valueOf(splitInfo[2]));
+			} else if(splitInfo.length == 5) {
+				newLine.setDistance(Double.valueOf(splitInfo[1]));
+				newLine.setDirection(Double.valueOf(splitInfo[2]));
+				newLine.setDistChng(Double.valueOf(splitInfo[3]));
+				newLine.setDirChng(Double.valueOf(splitInfo[4]));
+			}
+
+		}catch(Exception e){
+			newLine = null;
 		}
 
 	}
@@ -347,26 +363,32 @@ public class Parser {
 			newPlayer.setGoalie(true);
 		}
 
-		if (splitInfo.length == 3) {
-			newPlayer.setDistance(Double.valueOf(splitInfo[1]));
-			newPlayer.setDirection(Double.valueOf(splitInfo[2]));
-		} else if (splitInfo.length == 5) {
-			newPlayer.setDistance(Double.valueOf(splitInfo[1]));
-			newPlayer.setDirection(Double.valueOf(splitInfo[2]));
-			newPlayer.setDistChng(Double.valueOf(splitInfo[3]));
-			newPlayer.setDirChng(Double.valueOf(splitInfo[4]));
-		} else if (splitInfo.length == 7) {
-			newPlayer.setDistance(Double.valueOf(splitInfo[1]));
-			newPlayer.setDirection(Double.valueOf(splitInfo[2]));
-			newPlayer.setDistChng(Double.valueOf(splitInfo[3]));
-			newPlayer.setDirChng(Double.valueOf(splitInfo[4]));
-			newPlayer.setHeadDir((Double.valueOf(splitInfo[5])));
-			newPlayer.setBodyDir((Double.valueOf(splitInfo[6])));
-		}
+		try{
+			if (splitInfo.length == 3) {
+				newPlayer.setDistance(Double.valueOf(splitInfo[1]));
+				newPlayer.setDirection(Double.valueOf(splitInfo[2]));
+			} else if (splitInfo.length == 5) {
+				newPlayer.setDistance(Double.valueOf(splitInfo[1]));
+				newPlayer.setDirection(Double.valueOf(splitInfo[2]));
+				newPlayer.setDistChng(Double.valueOf(splitInfo[3]));
+				newPlayer.setDirChng(Double.valueOf(splitInfo[4]));
+			} else if (splitInfo.length == 7) {
 
-		String team = newPlayer.getTeam();
-		if(team != null)
-			newPlayer.setTeam(team.substring(1, team.length()-1));
+				newPlayer.setDistance(Double.valueOf(splitInfo[1]));
+				newPlayer.setDirection(Double.valueOf(splitInfo[2]));
+				newPlayer.setDistChng(Double.valueOf(splitInfo[3]));
+				newPlayer.setDirChng(Double.valueOf(splitInfo[4]));
+				newPlayer.setHeadDir((Double.valueOf(splitInfo[5])));
+				newPlayer.setBodyDir((Double.valueOf(splitInfo[6])));
+			}
+
+			String team = newPlayer.getTeam();
+			if(team != null)
+				newPlayer.setTeam(team.substring(1, team.length()-1));
+
+		}catch(Exception e){
+			newPlayer = null;
+		}
 	}
 
 	/**
